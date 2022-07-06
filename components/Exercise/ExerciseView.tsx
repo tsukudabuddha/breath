@@ -13,9 +13,10 @@ type Exercise = {
 
 }
 
+const startingWidth = 100;
+const maxWidth = Dimensions.get('screen').width * 0.85;
+
 export default function ExerciseView (props: Props) {
-  const maxWidth = Dimensions.get('screen').width * 0.85;
-  const startingWidth = 100;
   const [innerSize] = useState(new Animated.Value(startingWidth));
 
   function startAnimation() {
@@ -68,9 +69,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   outerView: {
-    width: Dimensions.get('screen').width * 0.85,
-    height: Dimensions.get('screen').width * 0.85,
-    borderRadius: (Dimensions.get('screen').width * 0.85) / 2,
+    width: maxWidth,
+    height: maxWidth,
+    borderRadius: maxWidth / 2,
     justifyContent: 'center',
     backgroundColor: 'blue',
     opacity: 0.5,
