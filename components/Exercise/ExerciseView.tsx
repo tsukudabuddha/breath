@@ -3,7 +3,7 @@ import { Animated, Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {
-  style: React.CSSProperties
+  // style: React.CSSProperties
 }
 
 type Exercise = {
@@ -53,7 +53,7 @@ export default function ExerciseView (props: Props) {
           backgroundColor: 'red',
           width: innerSize,
           height: innerSize,
-          borderRadius: innerSize 
+          borderRadius: innerSize
         }}>
         </Animated.View>
       </View>
@@ -63,10 +63,14 @@ export default function ExerciseView (props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: 'blue'
+    // flex: 1,
+    width: '85%',
+    height: '85%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'blue'
   },
   animatedContainer: {
-    alignContent: 'center',
     justifyContent: 'center',
   }
 });

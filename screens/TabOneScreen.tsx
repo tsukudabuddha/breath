@@ -1,6 +1,5 @@
 import { Button, StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import ExerciseView from '../components/Exercise/ExerciseView';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -18,14 +17,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
 });
