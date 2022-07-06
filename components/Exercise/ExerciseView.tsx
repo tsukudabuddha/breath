@@ -44,16 +44,10 @@ export default function ExerciseView (props: Props) {
     console.log("tap")
   }
 
-  const outerViewStyle = {
-    height: maxWidth,
-    width: maxWidth,
-    borderRadius: maxWidth
-  }
-
   return (
     <Pressable style={styles.container} onPress={startAnimation}>
       <View
-        style={{...styles.animatedContainer}}
+        style={styles.animatedContainer}
       >
         <Animated.View style={{
           backgroundColor: 'red',
@@ -74,6 +68,5 @@ const styles = StyleSheet.create({
   animatedContainer: {
     alignContent: 'center',
     justifyContent: 'center',
-    backgroundColor: 'blue'
   }
 });
