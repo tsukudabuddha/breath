@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Animated, Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Dimensions, Pressable, StyleSheet, View, Text } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {
@@ -17,6 +17,7 @@ const startingWidth = 100;
 const maxWidth = Dimensions.get('screen').width * 0.85;
 
 export default function ExerciseView (props: Props) {
+  const centerText = "Inhale"
   const [innerSize] = useState(new Animated.Value(startingWidth));
 
   function startAnimation() {
@@ -48,13 +49,16 @@ export default function ExerciseView (props: Props) {
   return (
     <Pressable style={styles.container} onPress={startAnimation}>
       <Animated.View style={{
-          backgroundColor: 'blue',
+          backgroundColor: 'white',
           width: innerSize,
           height: innerSize,
           borderRadius: innerSize,
           zIndex: 1
         }}>
       </Animated.View>
+      <View style={styles.staticCenterView}>
+        <Text>{centerText}</Text>
+      </View>
       <View
         style={styles.outerView}
       >
@@ -65,6 +69,16 @@ export default function ExerciseView (props: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  staticCenterView: {
+    backgroundColor: 'blue',
+    width: startingWidth,
+    height: startingWidth,
+    borderRadius: startingWidth / 2,
+    zIndex: 2,
+    position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
   },
