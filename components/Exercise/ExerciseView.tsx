@@ -15,7 +15,7 @@ type Exercise = {
 
 export default function ExerciseView (props: Props) {
   const maxWidth = Dimensions.get('screen').width * 0.85;
-  const startingWidth = 50;
+  const startingWidth = 100;
   const [innerSize] = useState(new Animated.Value(startingWidth));
 
   function startAnimation() {
@@ -25,15 +25,15 @@ export default function ExerciseView (props: Props) {
         innerSize,
         {
           toValue: maxWidth,
-          duration: 1000,
+          duration: 4000,
           useNativeDriver: false
         }
       ),
       Animated.timing(
         innerSize,
         {
-          toValue: 50,
-          duration: 1000,
+          toValue: startingWidth,
+          duration: 6000,
           useNativeDriver: false
         }
       )
@@ -46,16 +46,17 @@ export default function ExerciseView (props: Props) {
 
   return (
     <Pressable style={styles.container} onPress={startAnimation}>
-      <View
-        style={styles.animatedContainer}
-      >
-        <Animated.View style={{
-          backgroundColor: 'red',
+      <Animated.View style={{
+          backgroundColor: 'blue',
           width: innerSize,
           height: innerSize,
-          borderRadius: innerSize
+          borderRadius: innerSize,
+          zIndex: 1
         }}>
-        </Animated.View>
+      </Animated.View>
+      <View
+        style={styles.outerView}
+      >
       </View>
     </Pressable>
   );
@@ -63,14 +64,16 @@ export default function ExerciseView (props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    width: '85%',
-    height: '85%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue'
   },
-  animatedContainer: {
+  outerView: {
+    width: Dimensions.get('screen').width * 0.85,
+    height: Dimensions.get('screen').width * 0.85,
+    borderRadius: (Dimensions.get('screen').width * 0.85) / 2,
     justifyContent: 'center',
+    backgroundColor: 'blue',
+    opacity: 0.5,
+    position: 'absolute'
   }
 });
