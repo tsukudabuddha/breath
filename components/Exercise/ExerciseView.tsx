@@ -17,8 +17,40 @@ const startingWidth = 100;
 const maxWidth = Dimensions.get('screen').width * 0.85;
 
 export default function ExerciseView (props: Props) {
-  const centerText = "Inhale"
+  const [centerText, setCenterText] = useState("Inhale");
   const [innerSize] = useState(new Animated.Value(startingWidth));
+
+  function growCompletion() {
+    setCenterText("Exhale")
+    shrinkAnimation()
+  }
+
+  function shrinkCompletion() {
+    // TODO: Check if the breathwork is over
+    setCenterText("Inhale")
+  }
+
+  function growAnimation() {
+    Animated.timing(
+      innerSize,
+      {
+        toValue: maxWidth,
+        duration: 4000,
+        useNativeDriver: false
+      }
+    ).start(growCompletion);
+  }
+
+  function shrinkAnimation() {
+    Animated.timing(
+      innerSize,
+      {
+        toValue: startingWidth,
+        duration: 6000,
+        useNativeDriver: false
+      }
+    ).start(shrinkCompletion);
+  }
 
   function startAnimation() {
 
@@ -47,7 +79,7 @@ export default function ExerciseView (props: Props) {
   }
 
   return (
-    <Pressable style={styles.container} onPress={startAnimation}>
+    <Pressable style={styles.container} onPress={growAnimation}>
       <Animated.View style={{
           backgroundColor: 'white',
           width: innerSize,
@@ -57,7 +89,7 @@ export default function ExerciseView (props: Props) {
         }}>
       </Animated.View>
       <View style={styles.staticCenterView}>
-        <Text>{centerText}</Text>
+        <Text style={styles.text}>{centerText}</Text>
       </View>
       <View
         style={styles.outerView}
@@ -81,6 +113,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  text: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+    letterSpacing: 0.5
   },
   outerView: {
     width: maxWidth,
