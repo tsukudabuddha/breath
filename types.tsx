@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Exercise } from './types/ExerciseType';
 
 declare global {
   namespace ReactNavigation {
@@ -25,7 +26,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 type TabOneParams = {
-  title: string
+  exercise: Exercise;
 };
 
 export type RootTabParamList = {

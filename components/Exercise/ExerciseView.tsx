@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import { Animated, Dimensions, Pressable, StyleSheet, View, Text } from 'react-native';
+import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native';
+import { ExerciseType } from '../../types/ExerciseType';
 
 type Props = {
-  // style: React.CSSProperties
-}
-
-type Exercise = {
-  inhaleDuration: number
-  exhaleDuration: number
-  holdDuration: number
+  style: ViewStyle,
+  exercise: ExerciseType
 }
 
 const startingWidth = 100;
@@ -28,30 +24,36 @@ export default function ExerciseView (props: Props) {
     setCenterText("Inhale")
   }
 
+  /// Inhale Animation
   function growAnimation() {
     Animated.timing(
       innerSize,
       {
         toValue: maxWidth,
-        duration: 4000,
+        duration: props.exercise.inhaleDuration,
         useNativeDriver: false
       }
     ).start(growCompletion);
   }
 
+  /// Exhale Animation
   function shrinkAnimation() {
     Animated.timing(
       innerSize,
       {
         toValue: startingWidth,
-        duration: 6000,
+        duration: props.exercise.exhaleDuration,
         useNativeDriver: false
       }
     ).start(shrinkCompletion);
   }
 
+  function startAnimation() {
+    growAnimation()
+  }
+
   return (
-    <Pressable style={styles.container} onPress={growAnimation}>
+    <Pressable style={props.style} onPress={startAnimation}>
       <View
         style={styles.outerView}
       >
@@ -91,7 +93,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '700',
     fontSize: 22,
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
+    textAlign: 'center'
   },
   outerView: {
     width: maxWidth,
