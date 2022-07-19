@@ -5,73 +5,89 @@ import { ExerciseType } from '../../types/ExerciseType';
 type Props = {
   style: ViewStyle,
   exercise: ExerciseType
+  
 }
 
 const startingWidth = 100;
 const maxWidth = Dimensions.get('screen').width * 0.85;
 
 export default function ExerciseView (props: Props) {
-  const [centerText, setCenterText] = useState("Inhale");
   const [innerSize] = useState(new Animated.Value(startingWidth));
+  const [centerText, setCenterText] = useState("Inhale");
+  const [shouldAnimate, setShouldAnimate] = useState(false);
 
-  function growCompletion() {
-    setCenterText("Exhale")
-    shrinkAnimation()
+  let buttonText = "Start"
+
+  if (shouldAnimate) {
+    buttonText = "Cancel"
   }
 
-  function shrinkCompletion() {
-    // TODO: Check if the breathwork is over
-    setCenterText("Inhale")
-  }
-
-  /// Inhale Animation
-  function growAnimation() {
-    Animated.timing(
+  // MARK: Animation
+  function startAnimation() {
+    function animationCallback() {
+      buttonText = "Start";
+      setShouldAnimate(false); // Hack? To force change button text
+    }
+    const growAnimation = Animated.timing(
       innerSize,
       {
         toValue: maxWidth,
         duration: props.exercise.inhaleDuration,
         useNativeDriver: false
       }
-    ).start(growCompletion);
-  }
-
-  /// Exhale Animation
-  function shrinkAnimation() {
-    Animated.timing(
+    );
+    const shrinkAnimation = Animated.timing(
       innerSize,
       {
         toValue: startingWidth,
         duration: props.exercise.exhaleDuration,
         useNativeDriver: false
       }
-    ).start(shrinkCompletion);
+    );
+    let sequence = Animated.sequence(
+      [growAnimation, shrinkAnimation]
+    )
+    Animated.loop(sequence, {iterations:3}).start(animationCallback);
   }
 
-  function startAnimation() {
-    growAnimation()
+  if (shouldAnimate) {
+    startAnimation();
+  } else {
+    innerSize.stopAnimation();
+    innerSize.setValue(startingWidth);
   }
 
   return (
-    <Pressable style={props.style} onPress={startAnimation}>
-      <View
-        style={styles.outerView}
-      >
-        <Animated.View style={{
-          backgroundColor: 'white',
-          width: innerSize,
-          height: innerSize,
-          borderRadius: innerSize,
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1
-        }}>
-          <View style={styles.staticCenterView}>
-            <Text style={styles.text}>{centerText}</Text>
-          </View>
-        </Animated.View>
+    <View>
+      {/* Title */}
+      <Text style={styles.title}>{props.exercise.name}</Text>
+      {/* Animated Circles */}
+      <Pressable style={props.style} onPress={() => setShouldAnimate(!shouldAnimate)}>
+        <View
+          style={styles.outerView}
+        >
+          <Animated.View style={{
+            backgroundColor: 'white',
+            width: innerSize,
+            height: innerSize,
+            borderRadius: innerSize,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1
+          }}>
+            <View style={styles.staticCenterView}>
+              <Text style={styles.text}>{centerText}</Text>
+            </View>
+          </Animated.View>
+        </View>
+      </Pressable>
+      {/* Start/Pause Button */}
+      <View style={styles.buttonContainer}>
+        <Pressable style={styles.button} onPress={() => setShouldAnimate(!shouldAnimate)}>
+          <Text style={styles.text}>{buttonText}</Text>
+        </Pressable>
       </View>
-    </Pressable>
+    </View>
   );
 }
 
@@ -104,5 +120,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     opacity: 0.5,
     alignItems: 'center',
+  },
+  title: {
+    flex: 1/10,
+    fontSize: 22,
+    marginBottom: 50,
+    marginTop: 50,
+    fontWeight: 'bold'
+  },
+  exercise: {
+    flex: 8/10,
+    justifyContent: 'flex-start',
+  },
+  buttonContainer: {
+    flex: 0.2,
+    justifyContent: 'flex-end',
+    marginBottom: 30,
+    backgroundColor: 'rgba(0,0,0,0.0)'
+  },
+  button: {
+    backgroundColor: 'blue',
+    height: 60,
+    width: Dimensions.get('screen').width * 0.85,
+    justifyContent: 'center',
+    borderRadius: 6,
+    opacity: 0.75
   }
 });
