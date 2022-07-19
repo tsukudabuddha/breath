@@ -6,7 +6,6 @@ import ExerciseView from '../components/Exercise/ExerciseView';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { Exercise, Exercises } from '../types/Exercise';
-import { ExerciseType } from '../types/ExerciseType';
 
 export default function ExerciseScreen(props: RootTabScreenProps<'TabOne'>) {
   const [exercise] = useState(Exercises.get(Exercise.calm)); // TODO: Fetch Default

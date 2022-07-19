@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native';
-import { ExerciseType } from '../../types/ExerciseType';
+import { ExerciseType } from '../../types/Exercise'
 
 type Props = {
   style: ViewStyle,
@@ -62,9 +62,10 @@ export default function ExerciseView (props: Props) {
       {/* Title */}
       <Text style={styles.title}>{props.exercise.name}</Text>
       {/* Animated Circles */}
-      <Pressable style={props.style} onPress={() => setShouldAnimate(!shouldAnimate)}>
-        <View
+      <View style={props.style}>
+        <Pressable
           style={styles.outerView}
+          onPress={() => setShouldAnimate(!shouldAnimate)}
         >
           <Animated.View style={{
             backgroundColor: 'white',
@@ -76,11 +77,10 @@ export default function ExerciseView (props: Props) {
             zIndex: 1
           }}>
             <View style={styles.staticCenterView}>
-              <Text style={styles.text}>{centerText}</Text>
             </View>
           </Animated.View>
-        </View>
-      </Pressable>
+        </Pressable>
+      </View>
       {/* Start/Pause Button */}
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={() => setShouldAnimate(!shouldAnimate)}>
