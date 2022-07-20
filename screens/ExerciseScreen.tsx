@@ -10,7 +10,6 @@ import { Exercise, Exercises } from '../types/Exercise';
 export default function ExerciseScreen(props: RootTabScreenProps<'TabOne'>) {
   const [exercise] = useState(Exercises.get(Exercise.calm)); // TODO: Fetch Default
 
-  
   if (exercise !== undefined) {
     return (
       <SafeAreaView style={styles.container}>

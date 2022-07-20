@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native';
 import { ExerciseType } from '../../types/Exercise'
+import DurationPicker from './DurationPicker';
 
 type Props = {
   style: ViewStyle,
@@ -13,13 +14,19 @@ const maxWidth = Dimensions.get('screen').width * 0.85;
 
 export default function ExerciseView (props: Props) {
   const [innerSize] = useState(new Animated.Value(startingWidth));
-  const [centerText, setCenterText] = useState("Inhale");
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [selectedDurationIndex, setSelectedDurationIndex] = useState(0);
 
   let buttonText = "Start"
+  let iterations = props.exercise.durationOptions[selectedDurationIndex];
 
   if (shouldAnimate) {
     buttonText = "Cancel"
+  }
+
+  function handleDurationPickerPress(option: number) {
+
+    setSelectedDurationIndex(option);
   }
 
   // MARK: Animation
@@ -47,7 +54,7 @@ export default function ExerciseView (props: Props) {
     let sequence = Animated.sequence(
       [growAnimation, shrinkAnimation]
     )
-    Animated.loop(sequence, {iterations:3}).start(animationCallback);
+    Animated.loop(sequence, {iterations:iterations}).start(animationCallback);
   }
 
   if (shouldAnimate) {
@@ -87,6 +94,7 @@ export default function ExerciseView (props: Props) {
           <Text style={styles.text}>{buttonText}</Text>
         </Pressable>
       </View>
+      <DurationPicker handlePress={handleDurationPickerPress} exercise={props.exercise} selectedIndex={selectedDurationIndex}/>
     </View>
   );
 }
@@ -122,14 +130,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    flex: 1/10,
     fontSize: 22,
     marginBottom: 50,
     marginTop: 50,
     fontWeight: 'bold'
   },
   exercise: {
-    flex: 8/10,
     justifyContent: 'flex-start',
   },
   buttonContainer: {
