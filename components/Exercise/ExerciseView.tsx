@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native';
+import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle, Appearance } from 'react-native';
+import Colors from '../../constants/Colors';
 import { ExerciseType } from '../../types/Exercise'
 import DurationPicker from './DurationPicker';
 
@@ -11,6 +12,7 @@ type Props = {
 
 const startingWidth = 100;
 const maxWidth = Dimensions.get('screen').width * 0.85;
+const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Colors.light
 
 export default function ExerciseView (props: Props) {
   const [innerSize] = useState(new Animated.Value(startingWidth));
@@ -65,7 +67,7 @@ export default function ExerciseView (props: Props) {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       {/* Title */}
       <Text style={styles.title}>{props.exercise.name}</Text>
       {/* Animated Circles */}
@@ -88,13 +90,13 @@ export default function ExerciseView (props: Props) {
           </Animated.View>
         </Pressable>
       </View>
+      <DurationPicker style={styles.durationPicker} handlePress={handleDurationPickerPress} exercise={props.exercise} selectedIndex={selectedDurationIndex}/>
       {/* Start/Pause Button */}
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={() => setShouldAnimate(!shouldAnimate)}>
           <Text style={styles.text}>{buttonText}</Text>
         </Pressable>
       </View>
-      <DurationPicker handlePress={handleDurationPickerPress} exercise={props.exercise} selectedIndex={selectedDurationIndex}/>
     </View>
   );
 }
@@ -104,8 +106,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  durationPicker: {
+    width: Dimensions.get('screen').width * 0.5
+  },
   staticCenterView: {
-    backgroundColor: 'red',
+    backgroundColor: Colors.lightBlue.e,
     width: startingWidth,
     height: startingWidth,
     borderRadius: startingWidth / 2,
@@ -114,7 +119,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: 'white',
+    color: colorScheme.text,
     fontWeight: '700',
     fontSize: 22,
     letterSpacing: 0.5,
@@ -125,15 +130,15 @@ const styles = StyleSheet.create({
     height: maxWidth,
     borderRadius: maxWidth / 2,
     justifyContent: 'center',
-    backgroundColor: 'blue',
-    opacity: 0.5,
+    backgroundColor: Colors.lightBlue.a,
     alignItems: 'center',
   },
   title: {
     fontSize: 22,
     marginBottom: 50,
     marginTop: 50,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: colorScheme.text
   },
   exercise: {
     justifyContent: 'flex-start',
@@ -145,11 +150,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.0)'
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.lightBlue.b,
     height: 60,
     width: Dimensions.get('screen').width * 0.85,
     justifyContent: 'center',
     borderRadius: 6,
-    opacity: 0.75
   }
 });
