@@ -18,6 +18,7 @@ export default function ExerciseScreen(props: RootTabScreenProps<'TabOne'>) {
         <ExerciseView 
           style={styles.exercise} 
           exercise={exercise}
+          parentProps={props}
         />
       </SafeAreaView>
     );

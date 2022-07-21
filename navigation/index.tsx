@@ -9,6 +9,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
+import ExerciseList from '../components/Exercise/ExerciseList';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -41,7 +42,7 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={ExerciseScreen} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="Modal" component={ExerciseList} options={{title: 'Choose an Exercise'}} />
       </Stack.Group>
     </Stack.Navigator>
   );
