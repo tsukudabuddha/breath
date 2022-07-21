@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   deselectedButton: {
-    backgroundColor: 'lightgray',
+    backgroundColor: Colors.lightBlue.e,
     borderRadius: 10
   }
 })

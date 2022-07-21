@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   durationPicker: {
-    width: Dimensions.get('screen').width * 0.5
+    width: Dimensions.get('screen').width * 0.5,
+    marginBottom: 20
   },
   staticCenterView: {
     backgroundColor: Colors.lightBlue.e,
