@@ -136,8 +136,8 @@ const styles = StyleSheet.create({
   text: {
     color: colorScheme.text,
     fontWeight: '700',
-    fontSize: 22,
-    letterSpacing: 0.5,
+    fontSize: 18,
+    letterSpacing: 0.1,
     textAlign: 'center'
   },
   outerView: {

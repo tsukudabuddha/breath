@@ -1,4 +1,4 @@
-import { FlatList, Pressable, Text, StyleSheet } from "react-native";
+import { FlatList, Pressable, Text, StyleSheet, Appearance } from "react-native";
 import Colors from "../../constants/Colors";
 import { RootStackScreenProps } from "../../types";
 import { Exercises, ExerciseType } from "../../types/Exercise";
@@ -6,7 +6,7 @@ import { Exercises, ExerciseType } from "../../types/Exercise";
 export default function ExerciseList(props: RootStackScreenProps<'Modal'>) {
   const data = Array.from(Exercises.values());
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: {item:ExerciseType}) => {
     if ('name' in item) {
       return (
         <Pressable style={styles.button} onPress={() => props.route.params.didTapHandler(item)}>
@@ -22,11 +22,15 @@ export default function ExerciseList(props: RootStackScreenProps<'Modal'>) {
       data={data}
       renderItem={renderItem}
       keyExtractor={(item) => item.name}
+      style={styles.list}
     />
   )
 }
 
 const styles = StyleSheet.create({
+  list: {
+    marginTop: 10
+  },
   button: {
     borderRadius: 5,
     backgroundColor: Colors.lightBlue.d,
@@ -39,7 +43,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    // color: 'white',
-    fontWeight: '800'
+    fontWeight: '600',
+    letterSpacing: 0.2
   }
 })
