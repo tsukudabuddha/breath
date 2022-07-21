@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     backgroundColor: colorScheme.background
   },
   exercise: {
-    flex: 8/10,
-    justifyContent: 'flex-start',
+    flex: 1
   },
 });
