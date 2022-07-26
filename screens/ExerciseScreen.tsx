@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Appearance } from 'react-native';
-import { Button, Dimensions, Pressable, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ExerciseView from '../components/Exercise/ExerciseView';
-import { Text, View } from '../components/Themed';
+import { Text } from '../components/Themed';
 import Colors from '../constants/Colors';
-import { RootTabScreenProps } from '../types';
+import { RootStackScreenProps } from '../types';
 import { Exercise, Exercises } from '../types/Exercise';
 
-export default function ExerciseScreen(props: RootTabScreenProps<'TabOne'>) {
+export default function ExerciseScreen(props: RootStackScreenProps<'Root'>) {
   const [exercise] = useState(Exercises.get(Exercise.calm)); // TODO: Fetch Default
 
   if (exercise !== undefined) {

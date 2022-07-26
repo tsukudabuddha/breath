@@ -14,8 +14,12 @@ declare global {
   }
 }
 
+type RootParams = {
+
+}
+
 export type RootStackParamList = {
-  Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  Root: NavigatorScreenParams<RootParams> | undefined;
   Modal: ExerciseListParams;
   NotFound: undefined;
 };

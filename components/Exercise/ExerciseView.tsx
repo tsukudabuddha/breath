@@ -1,15 +1,14 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle, Appearance } from 'react-native';
 import Colors from '../../constants/Colors';
-import { RootTabScreenProps } from '../../types';
 import { ExerciseType } from '../../types/Exercise'
 import DurationPicker from './DurationPicker';
+import { RootStackScreenProps } from '../../types';
 
 type Props = {
   style: ViewStyle,
   exercise: ExerciseType,
-  parentProps: RootTabScreenProps<'TabOne'>,
+  parentProps: RootStackScreenProps<'Root'>,
 }
 
 const startingWidth = 100;
