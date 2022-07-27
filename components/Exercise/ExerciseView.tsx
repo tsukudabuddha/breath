@@ -14,7 +14,8 @@ type Props = {
 
 const startingWidth = 100;
 const maxWidth = Dimensions.get('screen').width * 0.85;
-const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Colors.light
+const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Colors.light;
+const progressBarWidth = Dimensions.get('screen').width * 0.5;
 
 export default function ExerciseView (props: Props) {
   const [innerSize] = useState(new Animated.Value(startingWidth));
@@ -59,10 +60,12 @@ export default function ExerciseView (props: Props) {
     const sequence = Animated.sequence(
       [growAnimation, shrinkAnimation]
     )
+    // Breathing animation
     Animated.loop(sequence, {iterations:iterations}).start(animationCallback);
     const duration = (exercise.inhaleDuration + exercise.exhaleDuration) * iterations;
+    // Progress Bar animation
     Animated.timing(progress, {
-      toValue: 100, 
+      toValue: progressBarWidth, 
       duration: duration, 
       useNativeDriver: false
     }).start();
@@ -105,24 +108,9 @@ export default function ExerciseView (props: Props) {
           </Animated.View>
         </Pressable>
       </View>
-
       {/* Progress Bar */}
-      <View style={{width: 100, alignItems: 'center', marginBottom: 10}}>
-        <View style={{
-          backgroundColor: 'gray',
-          height: 5,
-          alignSelf: 'stretch',
-          zIndex: 0
-        }}>
-          <Animated.View style={{
-            backgroundColor: 'red',
-            height: 5,
-            width: progress,
-            zIndex: -1
-          }}/>
-        </View>
-      </View>
-
+      <ProgressBar progress={progress} width={progressBarWidth}/>
+      {/* Duration Picker */}
       <DurationPicker style={styles.durationPicker} handlePress={handleDurationPickerPress} exercise={props.exercise} selectedIndex={selectedDurationIndex}/>
       {/* Start/Pause Button */}
       <View style={[styles.buttonContainer, styles.horizontalStack]}>
@@ -146,8 +134,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   durationPicker: {
-    width: Dimensions.get('screen').width * 0.5,
-    marginBottom: 20
+    width: progressBarWidth,
+    margin: 5
   },
   staticCenterView: {
     backgroundColor: Colors.lightBlue.e,
