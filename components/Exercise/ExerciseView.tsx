@@ -4,6 +4,7 @@ import Colors from '../../constants/Colors';
 import { ExerciseType } from '../../types/Exercise'
 import DurationPicker from './DurationPicker';
 import { RootStackScreenProps } from '../../types';
+import ProgressBar from '../Shared/ProgressBar';
 
 type Props = {
   style: ViewStyle,
@@ -17,6 +18,7 @@ const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Color
 
 export default function ExerciseView (props: Props) {
   const [innerSize] = useState(new Animated.Value(startingWidth));
+  const [progress] = useState(new Animated.Value(0));
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [selectedDurationIndex, setSelectedDurationIndex] = useState(0);
   const [exercise, setExercise] = useState(props.exercise);
@@ -29,7 +31,6 @@ export default function ExerciseView (props: Props) {
   }
 
   function handleDurationPickerPress(option: number) {
-
     setSelectedDurationIndex(option);
   }
 
@@ -55,10 +56,16 @@ export default function ExerciseView (props: Props) {
         useNativeDriver: false
       }
     );
-    let sequence = Animated.sequence(
+    const sequence = Animated.sequence(
       [growAnimation, shrinkAnimation]
     )
     Animated.loop(sequence, {iterations:iterations}).start(animationCallback);
+    const duration = (exercise.inhaleDuration + exercise.exhaleDuration) * iterations;
+    Animated.timing(progress, {
+      toValue: 100, 
+      duration: duration, 
+      useNativeDriver: false
+    }).start();
   }
 
   if (shouldAnimate) {
@@ -66,6 +73,7 @@ export default function ExerciseView (props: Props) {
   } else {
     innerSize.stopAnimation();
     innerSize.setValue(startingWidth);
+    progress.setValue(0);
   }
 
   function didSelectHandler(exercise: ExerciseType) {
@@ -97,6 +105,24 @@ export default function ExerciseView (props: Props) {
           </Animated.View>
         </Pressable>
       </View>
+
+      {/* Progress Bar */}
+      <View style={{width: 100, alignItems: 'center', marginBottom: 10}}>
+        <View style={{
+          backgroundColor: 'gray',
+          height: 5,
+          alignSelf: 'stretch',
+          zIndex: 0
+        }}>
+          <Animated.View style={{
+            backgroundColor: 'red',
+            height: 5,
+            width: progress,
+            zIndex: -1
+          }}/>
+        </View>
+      </View>
+
       <DurationPicker style={styles.durationPicker} handlePress={handleDurationPickerPress} exercise={props.exercise} selectedIndex={selectedDurationIndex}/>
       {/* Start/Pause Button */}
       <View style={[styles.buttonContainer, styles.horizontalStack]}>
