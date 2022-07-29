@@ -81,7 +81,8 @@ export default function ExerciseView (props: Props) {
     setShouldAnimate(!shouldAnimate);
   }
 
-  const duration = (exercise.inhaleDuration + exercise.exhaleDuration) * iterations;
+  const holdDuration = exercise.holdDuration ?? 0;
+  const duration = (exercise.inhaleDuration + exercise.exhaleDuration + holdDuration) * iterations;
 
   return (
     <View style={styles.container}>
