@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Animated, StyleSheet, View, Text, ViewStyle } from 'react-native';
+import {StyleSheet, View, Text, ViewStyle } from 'react-native';
+import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 type Props = {
   style: ViewStyle,
   shouldAnimate: boolean,
@@ -8,27 +9,29 @@ type Props = {
 }
 
 export default function ProgressBar(props: Props) {
-  const [progress] = useState(new Animated.Value(0));
   const [isAnimating, setIsAnimating] = useState(false);
+  const progress = useSharedValue(0);
   if (typeof props.style.width !== 'number') {
     return (<Text>Oops, an error has occurred</Text>)
   }
   const width = props.style.width ?? 100
   if (!isAnimating && props.shouldAnimate) {
-    progress.setValue(props.value);
-    Animated.timing(progress, {
-      toValue: width, 
-      duration: props.duration, 
-      useNativeDriver: false
-    }).start();
+    progress.value = withTiming(width, { duration: props.duration });
   } else {
-    progress.setValue(props.value);
+    cancelAnimation(progress);
+    progress.value = 0;
   }
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      width: progress.value
+    }
+  })
 
   return (
     <View style={[styles.container, props.style]}>
       <View style={styles.totalProgress}>
-        <Animated.View style={[styles.progressBar, {width: progress}]}/>
+        <Animated.View style={[styles.progressBar, animatedStyle]}/>
       </View>
     </View>
   )
