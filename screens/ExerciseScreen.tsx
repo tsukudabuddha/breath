@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, StatusBar } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -9,12 +9,17 @@ import Colors from '../constants/Colors';
 import { RootStackScreenProps } from '../types';
 import { Exercise, Exercises } from '../types/Exercise';
 
+const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Colors.light; // TODO: addChangeListener
+
 export default function ExerciseScreen(props: RootStackScreenProps<'Root'>) {
   const [exercise] = useState(Exercises.get(Exercise.calm)); // TODO: Fetch Default
 
   if (exercise !== undefined) {
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar
+        backgroundColor={colorScheme.background}
+        />
         <ExerciseView 
           style={styles.exercise} 
           exercise={exercise}
@@ -28,8 +33,6 @@ export default function ExerciseScreen(props: RootStackScreenProps<'Root'>) {
     )
   }
 }
-
-const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Colors.light; // TODO: addChangeListener
 
 const styles = StyleSheet.create({
   container: {
