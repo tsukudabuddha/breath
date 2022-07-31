@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Animated, Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle, Appearance } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View, Text, StyleProp, ViewStyle, Appearance, Platform } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSequence, withRepeat, cancelAnimation, runOnJS } from 'react-native-reanimated';
 import Colors from '../../constants/Colors';
 import { ExerciseType } from '../../types/Exercise'
 import DurationPicker from './DurationPicker';
@@ -18,11 +19,11 @@ const colorScheme = Appearance.getColorScheme() === 'dark' ? Colors.dark : Color
 const progressBarWidth = Dimensions.get('screen').width * 0.5;
 
 export default function ExerciseView (props: Props) {
-  const [innerSize] = useState(new Animated.Value(startingWidth));
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [selectedDurationIndex, setSelectedDurationIndex] = useState(0);
   const [exercise, setExercise] = useState(props.exercise);
   const [progressBarValue, setProgressBarValue] = useState(0);
+  const innerSize = useSharedValue(startingWidth);
 
   let buttonText = "Start"
   let iterations = props.exercise.durationOptions[selectedDurationIndex];
@@ -41,34 +42,20 @@ export default function ExerciseView (props: Props) {
       buttonText = "Start";
       setShouldAnimate(false); // Hack? To force change button text
     }
-    const growAnimation = Animated.timing(
-      innerSize,
-      {
-        toValue: maxWidth,
-        duration: exercise.inhaleDuration,
-        useNativeDriver: false
-      }
-    );
-    const shrinkAnimation = Animated.timing(
-      innerSize,
-      {
-        toValue: startingWidth,
-        duration: exercise.exhaleDuration,
-        useNativeDriver: false
-      }
-    );
-    const sequence = Animated.sequence(
-      [growAnimation, shrinkAnimation]
+
+    // Breathing Animation
+    const sequence = withSequence(
+      withTiming(maxWidth, {duration: exercise.inhaleDuration}), // Grow Animation
+      withTiming(Platform.OS == "ios" ? startingWidth : startingWidth - 1, {duration: exercise.exhaleDuration} ), // Shrink Animation
     )
-    // Breathing animation
-    Animated.loop(sequence, {iterations:iterations}).start(animationCallback);
+    innerSize.value = withRepeat(sequence, iterations, false, () => runOnJS(animationCallback)());
   }
 
   if (shouldAnimate) {
     startAnimation();
   } else {
-    innerSize.stopAnimation();
-    innerSize.setValue(startingWidth);
+    cancelAnimation(innerSize);
+    innerSize.value = startingWidth;
   }
 
   function didSelectHandler(exercise: ExerciseType) {
@@ -84,6 +71,14 @@ export default function ExerciseView (props: Props) {
   const holdDuration = exercise.holdDuration ?? 0;
   const duration = (exercise.inhaleDuration + exercise.exhaleDuration + holdDuration) * iterations;
 
+  const animatedCircleStyle = useAnimatedStyle(() => {
+    return {
+      width: innerSize.value,
+      height: innerSize.value,
+      borderRadius: innerSize.value / 2
+    }
+  });
+
   return (
     <View style={styles.container}>
       {/* Title */}
@@ -94,18 +89,8 @@ export default function ExerciseView (props: Props) {
           style={styles.outerView}
           onPress={() => setShouldAnimate(!shouldAnimate)}
         >
-          <Animated.View style={{
-            backgroundColor: 'white',
-            width: innerSize,
-            height: innerSize,
-            borderRadius: innerSize,
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1
-          }}>
-            <View style={styles.staticCenterView}>
-            </View>
-          </Animated.View>
+          <View style={styles.staticCenterView}/>
+          <Animated.View style={[styles.animatedCircle, animatedCircleStyle]}/>
         </Pressable>
       </View>
       {/* Progress Bar */}
@@ -129,6 +114,13 @@ export default function ExerciseView (props: Props) {
 }
 
 const styles = StyleSheet.create({
+  animatedCircle: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+    position: 'absolute'
+  },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -145,6 +137,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute'
   },
   text: {
     color: colorScheme.text,
