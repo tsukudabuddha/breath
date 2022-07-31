@@ -97,12 +97,14 @@ export default function ExerciseView (props: Props) {
       <ProgressBar shouldAnimate={shouldAnimate} value={progressBarValue} style={{width: progressBarWidth}} duration={duration}/>
       {/* Duration Picker */}
       <DurationPicker style={styles.durationPicker} handlePress={handleDurationPickerPress} exercise={props.exercise} selectedIndex={selectedDurationIndex}/>
-      {/* Start/Pause Button */}
+      {/* Buttons */}
       <View style={[styles.buttonContainer, styles.horizontalStack]}>
+        {/* Start/Pause Button */}
         <Pressable style={[styles.button, styles.primary]} onPress={startPauseButtonHandler}>
           <Text style={styles.text}>{buttonText}</Text>
         </Pressable>
-        <Pressable style={[styles.button, styles.secondary]} onPress={() => props.parentProps.navigation.navigate('Modal', {
+        {/* Change Breath Button */}
+        <Pressable style={[styles.button, styles.secondary]} onPress={() => props.parentProps.navigation.navigate('ExerciseListModal', {
           didTapHandler: didSelectHandler
           })}
         >

@@ -20,7 +20,7 @@ type RootParams = {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootParams> | undefined;
-  Modal: ExerciseListParams;
+  ExerciseListModal: ExerciseListParams;
   NotFound: undefined;
 };
 
