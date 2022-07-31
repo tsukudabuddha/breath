@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {StyleSheet, View, Text, ViewStyle } from 'react-native';
 import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 type Props = {
