@@ -9,13 +9,12 @@ type Props = {
 }
 
 export default function ProgressBar(props: Props) {
-  const [isAnimating, setIsAnimating] = useState(false);
   const progress = useSharedValue(0);
   if (typeof props.style.width !== 'number') {
     return (<Text>Oops, an error has occurred</Text>)
   }
   const width = props.style.width ?? 100
-  if (!isAnimating && props.shouldAnimate) {
+  if (props.shouldAnimate) {
     progress.value = withTiming(width, { duration: props.duration });
   } else {
     cancelAnimation(progress);
